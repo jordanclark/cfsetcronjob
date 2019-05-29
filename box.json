@@ -1,19 +1,16 @@
 {
     "name":"cfsetcronjob",
     "slug":"cfsetcronjob",
-    "version":"0.5.0",
+    "version":"0.5.1",
     "author":"Jordan Clark <jordanclark@gmail.com>",
     "keywords":[
-        "lastfm",
-        "last.fm",
-        "music",
-        "radio",
+        "cron",
         "api",
         "rest"
     ],
     "shortDescription":"API client for setcronjob.com",
     "type":"modules",
-    "location":"jordanclark/cfsetcronjob#v0.5.0",
+    "location":"jordanclark/cfsetcronjob#v0.5.1",
     "repository":{
         "URL":"https://github.com/jordanclark/cfsetcronjob.git",
         "type":"GIT"
