@@ -2,17 +2,14 @@ component {
 
 	function init(
 		required string apiKey
-	,	required string apiUrl= "https://www.setcronjob.com/api/"
-	,	numeric timeout= 120
-	,	boolean debug= false
+	,	string apiUrl= "https://www.setcronjob.com/api/"
+	,	numeric httpTimeOut= 120
+	,	boolean debug= ( request.debug ?: false )
 	) {
 		this.apiKey= arguments.apiKey;
 		this.apiUrl= arguments.apiUrl;
-		this.httpTimeOut= arguments.timeout;
+		this.httpTimeOut= arguments.httpTimeOut;
 		this.debug= arguments.debug;
-		if ( structKeyExists( request, "debug" ) && request.debug == true ) {
-			this.debug = request.debug;
-		}
 		//  0= ACTIVE= Cronjob is active and running 
 		//  1= DISABLED= Disabled by user 
 		//  2= EXPIRED= Disabled due to account expired 
