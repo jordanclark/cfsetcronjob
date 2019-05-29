@@ -1,4 +1,4 @@
-# setcronjob
+# cfsetcronjob
 SetCronJob.com ColdFusion Rest API Client
 
 # Changes
