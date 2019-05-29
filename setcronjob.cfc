@@ -12,7 +12,7 @@ component {
 		this.debug= arguments.debug;
 		if ( structKeyExists( request, "debug" ) && request.debug == true ) {
 			this.debug = request.debug;
-		}z
+		}
 		//  0= ACTIVE= Cronjob is active and running 
 		//  1= DISABLED= Disabled by user 
 		//  2= EXPIRED= Disabled due to account expired 
