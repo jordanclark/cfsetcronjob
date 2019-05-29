@@ -1,0 +1,40 @@
+{
+    "name":"cfsetcronjob",
+    "slug":"cfsetcronjob",
+    "version":"0.5.0",
+    "author":"Jordan Clark <jordanclark@gmail.com>",
+    "keywords":[
+        "lastfm",
+        "last.fm",
+        "music",
+        "radio",
+        "api",
+        "rest"
+    ],
+    "shortDescription":"API client for setcronjob.com",
+    "type":"modules",
+    "location":"jordanclark/cfsetcronjob#v0.5.0",
+    "repository":{
+        "URL":"https://github.com/jordanclark/cfsetcronjob.git",
+        "type":"GIT"
+    },
+    "homepage":"https://github.com/jordanclark/cfsetcronjob",
+    "bugs":"https://github.com/jordanclark/cfsetcronjob/issues",
+    "license":[
+        {
+            "type":"Apache-2.0",
+            "URL":"https://github.com/jordanclark/cfsetcronjob/blob/master/LICENSE"
+        }
+    ],
+    "private":false,
+    "ignore":[
+        "**/.*",
+        "/test/",
+        "/tests/"
+    ],
+    "scripts":{
+        "postVersion":"package set location='jordanclark/cfsetcronjob#v`package version`'",
+        "onRelease":"publish",
+        "postPublish":"!git push --follow-tags"
+    }
+}
