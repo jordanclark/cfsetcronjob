@@ -9,9 +9,13 @@
 # cfsetcronjob
 SetCronJob.com ColdFusion Rest API Client
 
-# Changes
+## To Install
+Run the following from commandbox:
+`box install cfsetcronjob`
+
+## Changes
 2019-05-28 Open source release
 
-# API documentation
+## API documentation
 https://www.setcronjob.com/documentation/api
 
