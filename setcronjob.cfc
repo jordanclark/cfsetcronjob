@@ -420,9 +420,7 @@ component {
 		arguments.token= this.apiKey;
 		out.requestUrl &= this.structToQueryString( arguments );
 		this.debugLog( out.requestUrl );
-		if ( request.debug && request.dump ) {
-			this.debugLog( out );
-		}
+		// this.debugLog( out );
 		cftimer( type="debug", label="setcronjob request" ) {
 			cfhttp( result="http", method="GET", url=out.requestUrl, charset="UTF-8", throwOnError=false, timeOut=this.httpTimeOut );
 		}
