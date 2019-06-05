@@ -213,7 +213,7 @@ component {
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		return this.apiRequest( api= "cron.enable", id= arguments.id, );
+		return this.apiRequest( api= "cron.enable", id= arguments.id );
 	}
 
 	function jobDisable( required string idOrName ) {
