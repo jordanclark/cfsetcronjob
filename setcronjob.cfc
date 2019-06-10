@@ -10,11 +10,11 @@ component {
 		this.apiUrl= arguments.apiUrl;
 		this.httpTimeOut= arguments.httpTimeOut;
 		this.debug= arguments.debug;
-		//  0= ACTIVE= Cronjob is active and running 
-		//  1= DISABLED= Disabled by user 
-		//  2= EXPIRED= Disabled due to account expired 
-		//  3= INACTIVE= Disabled due to not enough account points 
-		//  4= FAILED= Disabled due to many consecutive failures 
+		// 0= ACTIVE= Cronjob is active and running 
+		// 1= DISABLED= Disabled by user 
+		// 2= EXPIRED= Disabled due to account expired 
+		// 3= INACTIVE= Disabled due to not enough account points 
+		// 4= FAILED= Disabled due to many consecutive failures 
 		this.statusCodes= {
 			"0"= "ACTIVE"
 		,	"1"= "DISABLED"
@@ -29,10 +29,10 @@ component {
 		,	"INACTIVE"= 3
 		,	"FAILED"= 4
 		};
-		//  0= NEVER= Never send you any notification 
-		//  1= FAILURE= Notify you when cronjob fails 
-		//  2= ALWAYS= Notify you when cronjob is executed 
-		//  3= DISABLED= Notify you only when cronjob disabled because of multiple consecutive failures 
+		// 0= NEVER= Never send you any notification 
+		// 1= FAILURE= Notify you when cronjob fails 
+		// 2= ALWAYS= Notify you when cronjob is executed 
+		// 3= DISABLED= Notify you only when cronjob disabled because of multiple consecutive failures 
 		this.notifyCodes= {
 			"0"= "NEVER"
 		,	"1"= "FAILURE"
@@ -47,7 +47,7 @@ component {
 		};
 		this.jobCache= {};
 		this.groupCache= {};
-		//  alternate names for methods 
+		// alternate names for methods 
 		this.cronAdd= this.jobAdd;
 		this.cronEdit= this.jobEdit;
 		this.cronGet= this.jobGet;
@@ -137,7 +137,7 @@ component {
 		}
 		structDelete( arguments, "group" );
 		var out= this.apiRequest( api= "cron.edit", argumentCollection= arguments );
-		//  cache new job 
+		// cache new job 
 		if ( out.success ) {
 			this.jobCache[ out.response.data.id ]= out.response.data.id;
 			if ( len( out.response.data.name ) ) {
@@ -183,7 +183,7 @@ component {
 		}
 		structDelete( arguments, "group" );
 		var out= this.apiRequest( api= "cron.edit", argumentCollection= arguments );
-		//  cache name job 
+		// cache name job 
 		if ( out.success ) {
 			this.jobCache[ out.response.data.id ]= out.response.data.id;
 			if ( len( out.response.data.name ) ) {
@@ -251,7 +251,7 @@ component {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "cron.delete", id= arguments.id );
-		//  un-cache job 
+		// un-cache job 
 		if ( out.success ) {
 			structDelete( this.jobLookup, arguments.id );
 			structDelete( this.jobLookup, arguments.idOrName );
@@ -324,7 +324,7 @@ component {
 			api= "group.add"
 		,	name= arguments.name
 		);
-		//  cache new group 
+		// cache new group 
 		if ( out.success ) {
 			this.groupCache[ out.response.data.id ]= out.response.data.id;
 			this.groupCache[ out.response.data.name ]= out.response.data.id;
@@ -339,7 +339,7 @@ component {
 			arguments.id= this.groupLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "group.edit", id= arguments.id, name= arguments.name );
-		//  cache group 
+		// cache group 
 		if ( out.success ) {
 			this.groupCache[ out.response.data.id ]= out.response.data.id;
 			this.groupCache[ out.response.data.name ]= out.response.data.id;
@@ -354,7 +354,7 @@ component {
 			arguments.id= this.groupLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "group.delete", id= arguments.id );
-		//  un-cache job 
+		// un-cache job 
 		if ( out.success ) {
 			structDelete( this.groupLookup, arguments.id );
 			structDelete( this.groupLookup, arguments.idOrName );
@@ -369,7 +369,7 @@ component {
 			arguments.id= this.groupLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "group.vanish", id= arguments.id );
-		//  un-cache job 
+		// un-cache job 
 		if ( out.success ) {
 			structDelete( this.groupLookup, arguments.id );
 			structDelete( this.groupLookup, arguments.idOrName );
@@ -437,7 +437,7 @@ component {
 		} else if ( left( out.statusCode, 1 ) == 2 ) {
 			out.success= true;
 		}
-		//  parse response 
+		// parse response 
 		if ( len( out.response ) ) {
 			try {
 				out.response= deserializeJSON( out.response );
