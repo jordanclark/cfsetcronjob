@@ -1,7 +1,7 @@
 {
     "name":"cfsetcronjob",
     "slug":"cfsetcronjob",
-    "version":"0.5.8",
+    "version":"0.5.9",
     "author":"Jordan Clark <jordanclark@gmail.com>",
     "keywords":[
         "cron",
@@ -10,7 +10,7 @@
     ],
     "shortDescription":"API client for setcronjob.com",
     "type":"modules",
-    "location":"jordanclark/cfsetcronjob#v0.5.8",
+    "location":"jordanclark/cfsetcronjob#v0.5.9",
     "repository":{
         "URL":"https://github.com/jordanclark/cfsetcronjob.git",
         "type":"GIT"
