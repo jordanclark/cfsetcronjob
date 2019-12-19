@@ -1,5 +1,6 @@
 component {
-
+	cfprocessingdirective( preserveCase=true );
+	
 	function init(
 		required string apiKey
 	,	string apiUrl= "https://www.setcronjob.com/api/"
@@ -102,7 +103,7 @@ component {
 	////////////////////////////////////////////////////////////////////////////////////
 
 	function jobAdd(
-		required string idOrName
+		required string name
 	,	required string url
 	,	second
 	,	minute
@@ -113,30 +114,26 @@ component {
 	,	string expression= ""
 	,	string timezone
 	,	string httpMethod= "GET"
+	,	string httpHeaders
+	,	string userAgent
+	,	string username
+	,	string password
 	,	string postData= ""
 	,	string notify= "NEVER"
 	,	string notifyEvery= 1
 	,	string failureThreshold= 10
 	,	string pattern= ""
 	,	string group= 0
-	,	string name= ""
 	) {
-		if ( isNumeric( arguments.idOrName ) ) {
-			arguments.id= arguments.idOrName;
-		} else {
-			arguments.id= this.jobLookup( arguments.idOrName );
-		}
-		structDelete( arguments, "idOrName" );
 		if ( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
 			arguments.notify= this.notifyLookup[ arguments.notify ];
 		}
 		if ( isNumeric( arguments.group ) ) {
-			arguments.groupID= arguments.group;
+			arguments.group= arguments.group;
 		} else {
-			arguments.groupID= this.groupLookup( arguments.group );
+			arguments.group= this.groupLookup( arguments.group );
 		}
-		structDelete( arguments, "group" );
-		var out= this.apiRequest( api= "cron.edit", argumentCollection= arguments );
+		var out= this.apiRequest( api= "cron.add", argumentCollection= arguments );
 		// cache new job 
 		if ( out.success ) {
 			this.jobCache[ out.response.data.id ]= out.response.data.id;
@@ -165,11 +162,11 @@ component {
 	,	string failureThreshold
 	,	string pattern
 	,	string group
-	,	string name
 	) {
 		if ( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
+			arguments.name= arguments.idOrName;
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
 		structDelete( arguments, "idOrName" );
@@ -177,11 +174,10 @@ component {
 			arguments.notify= this.notifyLookup[ arguments.notify ];
 		}
 		if ( structKeyExists( arguments, "group" ) && isNumeric( arguments.group ) ) {
-			arguments.groupID= arguments.group;
+			arguments.group= arguments.group;
 		} else {
-			arguments.groupID= this.groupLookup( arguments.group );
+			arguments.group= this.groupLookup( arguments.group );
 		}
-		structDelete( arguments, "group" );
 		var out= this.apiRequest( api= "cron.edit", argumentCollection= arguments );
 		// cache name job 
 		if ( out.success ) {
