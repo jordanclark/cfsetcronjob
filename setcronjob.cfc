@@ -264,13 +264,13 @@ component {
 		return this.apiRequest( api= "cron.run", id= arguments.id );
 	}
 
-	function jobLogs( required string idOrName ) {
+	function jobLogs( required string idOrName, numeric limit= 250 ) {
 		if ( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		return this.apiRequest( api= "cron.logs", id= arguments.id );
+		return this.apiRequest( api= "cron.logs", id= arguments.id, limit= arguments.limit );
 	}
 
 	function jobList() {
