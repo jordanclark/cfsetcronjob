@@ -273,13 +273,13 @@ component {
 		return this.apiRequest( api= "cron.logs", id= arguments.id, limit= arguments.limit );
 	}
 
-	function jobList() {
-		return this.apiRequest( api= "cron.list" );
+	function jobList( string keyword= "" ) {
+		return this.apiRequest( api= "cron.list", keyword= arguments.keyword );
 	}
 
 	function jobLookup( required string name, boolean reload= false ) {
 		if ( structIsEmpty( this.jobCache ) || arguments.reload ) {
-			var out= this.jobList();
+			var out= this.jobList( arguments.name );
 			if ( out.success ) {
 				var job= 0;
 				this.jobCache= {};
