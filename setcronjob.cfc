@@ -59,18 +59,24 @@ component {
 		this.cronDelete= this.jobDelete;
 		this.cronRun= this.jobRun;
 		this.cronLogs= this.jobLogs;
+
+		this.jobNotFound= {
+			success= false
+		,	error= "Job was not found"
+		};
+
 		return this;
 	}
 
 	function debugLog( required input ) {
-		if ( structKeyExists( request, "log" ) && isCustomFunction( request.log ) ) {
-			if ( isSimpleValue( arguments.input ) ) {
+		if( structKeyExists( request, "log" ) && isCustomFunction( request.log ) ) {
+			if( isSimpleValue( arguments.input ) ) {
 				request.log( "setcronjob: " & arguments.input );
 			} else {
 				request.log( "setcronjob: (complex type)" );
 				request.log( arguments.input );
 			}
-		} else if ( this.debug ) {
+		} else if( this.debug ) {
 			var info= ( isSimpleValue( arguments.input ) ? arguments.input : serializeJson( arguments.input ) );
 			cftrace(
 				var= "info"
@@ -93,9 +99,9 @@ component {
 		var out= this.apiRequest( api= "server.ip" );
 		out.ip4= [];
 		out.ip6= [];
-		if ( out.success ) {
+		if( out.success ) {
 			var item= "";
-			for ( item in out.response.data ) {
+			for( item in out.response.data ) {
 				arrayAppend( out.ip4, out.response.data[ item ].v4 );
 				arrayAppend( out.ip6, out.response.data[ item ].v6 );
 			}
@@ -131,19 +137,19 @@ component {
 	,	string pattern= ""
 	,	string group= 0
 	) {
-		if ( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
+		if( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
 			arguments.notify= this.notifyLookup[ arguments.notify ];
 		}
-		if ( isNumeric( arguments.group ) ) {
+		if( isNumeric( arguments.group ) ) {
 			arguments.group= arguments.group;
 		} else {
 			arguments.group= this.groupLookup( arguments.group );
 		}
 		var out= this.apiRequest( api= "cron.add", argumentCollection= arguments );
 		// cache new job 
-		if ( out.success ) {
+		if( out.success ) {
 			this.jobCache[ out.response.data.id ]= out.response.data.id;
-			if ( len( out.response.data.name ) ) {
+			if( len( out.response.data.name ) ) {
 				this.jobCache[ out.response.data.name ]= out.response.data.id;
 			}
 		}
@@ -169,26 +175,29 @@ component {
 	,	string pattern
 	,	string group
 	) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.name= arguments.idOrName;
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
+		if( arguments.id < 0 ) {
+			return this.jobNotFound;
+		}
 		structDelete( arguments, "idOrName" );
-		if ( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
+		if( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
 			arguments.notify= this.notifyLookup[ arguments.notify ];
 		}
-		if ( structKeyExists( arguments, "group" ) && isNumeric( arguments.group ) ) {
+		if( structKeyExists( arguments, "group" ) && isNumeric( arguments.group ) ) {
 			arguments.group= arguments.group;
 		} else {
 			arguments.group= this.groupLookup( arguments.group );
 		}
 		var out= this.apiRequest( api= "cron.edit", argumentCollection= arguments );
 		// cache name job 
-		if ( out.success ) {
+		if( out.success ) {
 			this.jobCache[ out.response.data.id ]= out.response.data.id;
-			if ( len( out.response.data.name ) ) {
+			if( len( out.response.data.name ) ) {
 				this.jobCache[ out.response.data.name ]= out.response.data.id;
 			}
 		}
@@ -196,35 +205,49 @@ component {
 	}
 
 	function jobGet( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		var out= this.apiRequest( api= "cron.get", id= arguments.id );
-		out.job= {};
-		if ( out.success ) {
-			out.job= out.response.data;
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.get", id= arguments.id );
+			out.job= {};
+			if( out.success ) {
+				out.job= out.response.data;
+			}
 		}
 		return out;
 	}
 
 	function jobEnable( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		return this.apiRequest( api= "cron.enable", id= arguments.id );
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.enable", id= arguments.id )
+		}
+		return out;
 	}
 
 	function jobDisable( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		return this.apiRequest( api= "cron.disable", id= arguments.id );
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.disable", id= arguments.id )
+		}
+		return out;
 	}
 
 	array function jobToggleMatches( required boolean enable, required string matches ) {
@@ -233,9 +256,9 @@ component {
 		var batch= [];
 		var jobs= this.jobList();
 		arrayAppend( batch, jobs );
-		for ( job in jobs.response.data ) {
-			if ( listFindNoCase( arguments.matches, job.id ) || reFindNoCase( arguments.matches, job.name ) ) {
-				if ( arguments.enable ) {
+		for( job in jobs.response.data ) {
+			if( listFindNoCase( arguments.matches, job.id ) || reFindNoCase( arguments.matches, job.name ) ) {
+				if( arguments.enable ) {
 					update= this.jobEnable( job.id );
 				} else {
 					update= this.jobDisable( job.id );
@@ -247,36 +270,50 @@ component {
 	}
 
 	function jobDelete( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		var out= this.apiRequest( api= "cron.delete", id= arguments.id );
-		// un-cache job 
-		if ( out.success ) {
-			structDelete( this.jobLookup, arguments.id );
-			structDelete( this.jobLookup, arguments.idOrName );
-		}
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.delete", id= arguments.id );
+			// un-cache job 
+			if( out.success ) {
+				structDelete( this.jobLookup, arguments.id );
+				structDelete( this.jobLookup, arguments.idOrName );
+			}
+		}		
 		return out;
 	}
 
 	function jobRun( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		return this.apiRequest( api= "cron.run", id= arguments.id );
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.disable", id= arguments.id );
+		}
+		return out;
 	}
 
 	function jobLogs( required string idOrName, numeric limit= 250 ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.jobLookup( arguments.idOrName );
 		}
-		return this.apiRequest( api= "cron.logs", id= arguments.id, limit= arguments.limit );
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.logs", id= arguments.id, limit= arguments.limit );
+		}
+		return out;
 	}
 
 	function jobList( string keyword= "" ) {
@@ -284,14 +321,12 @@ component {
 	}
 
 	function jobLookup( required string name, boolean reload= false ) {
-		if ( structIsEmpty( this.jobCache ) || arguments.reload ) {
+		if( !structKeyExists( this.jobCache, arguments.name ) || arguments.reload ) {
 			var out= this.jobList( arguments.name );
-			if ( out.success ) {
-				var job= 0;
-				this.jobCache= {};
-				for ( job in out.response.data ) {
+			if( out.success ) {
+				for( var job in out.response.data ) {
 					this.jobCache[ job.id ]= job.id;
-					if ( len( job.name ) ) {
+					if( len( job.name ) ) {
 						this.jobCache[ job.name ]= job.id;
 					}
 				}
@@ -313,7 +348,7 @@ component {
 	}
 
 	function groupGet( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.groupLookup( arguments.idOrName );
@@ -327,7 +362,7 @@ component {
 		,	name= arguments.name
 		);
 		// cache new group 
-		if ( out.success ) {
+		if( out.success ) {
 			this.groupCache[ out.response.data.id ]= out.response.data.id;
 			this.groupCache[ out.response.data.name ]= out.response.data.id;
 		}
@@ -335,14 +370,14 @@ component {
 	}
 
 	function groupEdit( required string idOrName, required string name ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.groupLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "group.edit", id= arguments.id, name= arguments.name );
 		// cache group 
-		if ( out.success ) {
+		if( out.success ) {
 			this.groupCache[ out.response.data.id ]= out.response.data.id;
 			this.groupCache[ out.response.data.name ]= out.response.data.id;
 		}
@@ -350,14 +385,14 @@ component {
 	}
 
 	function groupDelete( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.groupLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "group.delete", id= arguments.id );
 		// un-cache job 
-		if ( out.success ) {
+		if( out.success ) {
 			structDelete( this.groupLookup, arguments.id );
 			structDelete( this.groupLookup, arguments.idOrName );
 		}
@@ -365,14 +400,14 @@ component {
 	}
 
 	function groupVanish( required string idOrName ) {
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.groupLookup( arguments.idOrName );
 		}
 		var out= this.apiRequest( api= "group.vanish", id= arguments.id );
 		// un-cache job 
-		if ( out.success ) {
+		if( out.success ) {
 			structDelete( this.groupLookup, arguments.id );
 			structDelete( this.groupLookup, arguments.idOrName );
 		}
@@ -381,7 +416,7 @@ component {
 
 	function groupEmpty( required string idOrName ) {
 		var out= "";
-		if ( isNumeric( arguments.idOrName ) ) {
+		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
 			arguments.id= this.groupLookup( arguments.idOrName );
@@ -390,14 +425,14 @@ component {
 	}
 
 	function groupLookup( required string name, boolean reload= false ) {
-		if ( structIsEmpty( this.groupCache ) || arguments.reload ) {
+		if( structIsEmpty( this.groupCache ) || arguments.reload ) {
 			var out= this.groupList();
-			if ( out.success ) {
+			if( out.success ) {
 				var group= 0;
 				this.groupCache= {};
-				for ( group in out.response.data ) {
+				for( group in out.response.data ) {
 					this.groupCache[ group.id ]= group.id;
-					if ( len( group.name ) ) {
+					if( len( group.name ) ) {
 						this.groupCache[ group.name ]= group.id;
 					}
 				}
@@ -430,19 +465,19 @@ component {
 		out.response= toString( http.fileContent );
 		// this.debugLog( out.response );
 		out.statusCode = http.responseHeader.Status_Code ?: 500;
-		if ( left( out.statusCode, 1 ) == 4 || left( out.statusCode, 1 ) == 5 ) {
+		if( left( out.statusCode, 1 ) == 4 || left( out.statusCode, 1 ) == 5 ) {
 			out.success= false;
 			out.error= "status code error: #out.statusCode#";
-		} else if ( out.response == "Connection Timeout" || out.response == "Connection Failure" ) {
+		} else if( out.response == "Connection Timeout" || out.response == "Connection Failure" ) {
 			out.error= out.response;
-		} else if ( left( out.statusCode, 1 ) == 2 ) {
+		} else if( left( out.statusCode, 1 ) == 2 ) {
 			out.success= true;
 		}
 		// parse response 
-		if ( len( out.response ) ) {
+		if( len( out.response ) ) {
 			try {
 				out.response= deserializeJSON( out.response );
-				if ( isStruct( out.response ) && structKeyExists( out.response, "status" ) && out.response.status == "error" ) {
+				if( isStruct( out.response ) && structKeyExists( out.response, "status" ) && out.response.status == "error" ) {
 					out.success= false;
 					out.error= out.response.message;
 				}
@@ -450,7 +485,7 @@ component {
 				out.error= "JSON Error: " & (cfcatch.message?:"No catch message") & " " & (cfcatch.detail?:"No catch detail");
 			}
 		}
-		if ( len( out.error ) ) {
+		if( len( out.error ) ) {
 			out.success= false;
 		}
 		this.debugLog( out.statusCode & " " & out.error );
@@ -462,10 +497,10 @@ component {
 		var sItem= "";
 		var sValue= "";
 		var amp= "?";
-		for ( sItem in stInput ) {
-			if ( !isNull( stInput[ sItem ] ) ) {
+		for( sItem in stInput ) {
+			if( !isNull( stInput[ sItem ] ) ) {
 				sValue= stInput[ sItem ];
-				if ( bEncode ) {
+				if( bEncode ) {
 					sOutput &= amp & lCase( sItem ) & "=" & urlEncodedFormat( sValue );
 				} else {
 					sOutput &= amp & lCase( sItem ) & "=" & sValue;
