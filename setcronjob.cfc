@@ -297,7 +297,7 @@ component {
 		if( arguments.id < 0 ) {
 			var out= this.jobNotFound;
 		} else {
-			var out= this.apiRequest( api= "cron.disable", id= arguments.id );
+			var out= this.apiRequest( api= "cron.run", id= arguments.id );
 		}
 		return out;
 	}
