@@ -321,7 +321,10 @@ component {
 	}
 
 	function jobLookup( required string name, boolean reload= false ) {
-		if( !structKeyExists( this.jobCache, arguments.name ) || arguments.reload ) {
+		if( arguments.reload ) {
+			structDelete( this.jobCache, arguments.name );
+		}
+		if( !structKeyExists( this.jobCache, arguments.name ) ) {	
 			var out= this.jobList( arguments.name );
 			if( out.success ) {
 				for( var job in out.response.data ) {
