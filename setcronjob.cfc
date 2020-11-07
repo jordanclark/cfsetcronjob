@@ -135,7 +135,7 @@ component {
 	,	string notifyEvery= 1
 	,	string failureThreshold= 10
 	,	string pattern= ""
-	,	string group= 0
+	,	string group= ""
 	) {
 		if( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
 			arguments.notify= this.notifyLookup[ arguments.notify ];
@@ -431,7 +431,7 @@ component {
 		if( structIsEmpty( this.groupCache ) || arguments.reload ) {
 			var out= this.groupList();
 			if( out.success ) {
-				var group= 0;
+				var group= "";
 				this.groupCache= {};
 				for( group in out.response.data ) {
 					this.groupCache[ group.id ]= group.id;
@@ -441,7 +441,7 @@ component {
 				}
 			}
 		}
-		return ( structKeyExists( this.groupCache, arguments.name ) ? this.groupCache[ arguments.name ] : 0 );
+		return ( structKeyExists( this.groupCache, arguments.name ) ? this.groupCache[ arguments.name ] : "" );
 	}
 
 	struct function apiRequest( required string api ) {
