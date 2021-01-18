@@ -14,6 +14,7 @@ Run the following from commandbox:
 `box install cfsetcronjob`
 
 ## Changes
+2021-01-18 Add support for new attributes single instance, retry #, retryAfter & retryFailed.
 2019-05-28 Open source release
 
 ## API documentation

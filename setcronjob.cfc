@@ -136,6 +136,10 @@ component {
 	,	string failureThreshold= 10
 	,	string pattern= ""
 	,	string group= ""
+	,	numeric retry= 3
+	,	numeric retryAfter= 5
+	,	boolean single= false
+	,	boolean retryFailed= true
 	) {
 		if( structKeyExists( arguments, "notify" ) && !isNumeric( arguments.notify ) ) {
 			arguments.notify= this.notifyLookup[ arguments.notify ];
@@ -174,6 +178,10 @@ component {
 	,	string failureThreshold
 	,	string pattern
 	,	string group
+	,	string retry= ""
+	,	string retryAfter= ""
+	,	string single= ""
+	,	string retryFailed= ""
 	) {
 		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
@@ -500,10 +508,10 @@ component {
 		var sItem= "";
 		var sValue= "";
 		var amp= "?";
-		for( sItem in stInput ) {
-			if( !isNull( stInput[ sItem ] ) ) {
-				sValue= stInput[ sItem ];
-				if( bEncode ) {
+		for( sItem in arguments.stInput ) {
+			if( !isNull( arguments.stInput[ sItem ] ) && len( arguments.stInput[ sItem ] ) ) {
+				sValue= arguments.stInput[ sItem ];
+				if( arguments.bEncode ) {
 					sOutput &= amp & lCase( sItem ) & "=" & urlEncodedFormat( sValue );
 				} else {
 					sOutput &= amp & lCase( sItem ) & "=" & sValue;
