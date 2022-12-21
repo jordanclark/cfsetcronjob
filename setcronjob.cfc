@@ -47,6 +47,7 @@ component {
 		,	"ALWAYS"= 2
 		,	"DISABLED"= 3
 		};
+		this.useCache= false;
 		this.jobCache= {};
 		this.groupCache= {};
 		// alternate names for methods 
@@ -328,7 +329,7 @@ component {
 		return this.apiRequest( api= "cron.list", keyword= arguments.keyword );
 	}
 
-	function jobLookup( required string name, boolean reload= false ) {
+	function jobLookup( required string name, boolean reload= !(this.useCache) ) {
 		if( arguments.reload ) {
 			structDelete( this.jobCache, arguments.name );
 		}
@@ -435,7 +436,7 @@ component {
 		return this.apiRequest( api= "group.vanish", id= arguments.id );
 	}
 
-	function groupLookup( required string name, boolean reload= false ) {
+	function groupLookup( required string name, boolean reload= !(this.useCache) ) {
 		if( structIsEmpty( this.groupCache ) || arguments.reload ) {
 			var out= this.groupList();
 			if( out.success ) {
