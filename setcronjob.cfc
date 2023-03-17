@@ -1,1 +1,1 @@
-component extends="fastcronjob" {}
+component extends="fastcron" {}

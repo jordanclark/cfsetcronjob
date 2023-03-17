@@ -1,16 +1,16 @@
 {
     "name":"cfsetcronjob",
     "slug":"cfsetcronjob",
-    "version":"0.9.0",
+    "version":"0.10.0",
     "author":"Jordan Clark <jordanclark@gmail.com>",
     "keywords":[
         "cron",
         "api",
         "rest"
     ],
-    "shortDescription":"API client for fastcronjob.com (formerly setcronjob.com)",
+    "shortDescription":"API client for fastcron.com (formerly setcronjob.com)",
     "type":"modules",
-    "location":"jordanclark/cfsetcronjob#v0.9.0",
+    "location":"jordanclark/cfsetcronjob#v0.10.0",
     "repository":{
         "URL":"https://github.com/jordanclark/cfsetcronjob.git",
         "type":"GIT"

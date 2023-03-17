@@ -3,7 +3,7 @@ component {
 	
 	function init(
 		required string apiKey
-	,	string apiUrl= "https://www.fastcronjob.com/api/"
+	,	string apiUrl= "https://www.fastcron.com/api/"
 	,	numeric httpTimeOut= 120
 	,	boolean debug
 	) {
@@ -111,7 +111,7 @@ component {
 
 	////////////////////////////////////////////////////////////////////////////////////
 	// CRON JOB METHODS
-	// https://www.setcronjob.com/documentation/api/cron
+	// https://www.fastcron.com/documentation/api/cron
 	////////////////////////////////////////////////////////////////////////////////////
 
 	function jobAdd(
@@ -438,7 +438,7 @@ component {
 
 	////////////////////////////////////////////////////////////////////////////////////
 	// GROUP METHODS
-	// https://www.setcronjob.com/documentation/api/group
+	// https://www.fastcron.com/documentation/api/group
 	////////////////////////////////////////////////////////////////////////////////////
 
 	function groupList() {
