@@ -298,7 +298,7 @@ component {
 		if( arguments.id < 0 ) {
 			var out= this.jobNotFound;
 		} else {
-			var out= this.apiRequest( api= "cron.enable", id= arguments.id )
+			var out= this.apiRequest( api= "cron.enable", id= arguments.id );
 		}
 		return out;
 	}
@@ -312,7 +312,7 @@ component {
 		if( arguments.id < 0 ) {
 			var out= this.jobNotFound;
 		} else {
-			var out= this.apiRequest( api= "cron.disable", id= arguments.id )
+			var out= this.apiRequest( api= "cron.disable", id= arguments.id );
 		}
 		return out;
 	}
@@ -326,7 +326,7 @@ component {
 		if( arguments.id < 0 ) {
 			var out= this.jobNotFound;
 		} else {
-			var out= this.apiRequest( api= "cron.pause", id= arguments.id, for= arguments.length )
+			var out= this.apiRequest( api= "cron.pause", id= arguments.id, for= arguments.length );
 		}
 		return out;
 	}
