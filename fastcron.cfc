@@ -303,21 +303,7 @@ component {
 		return out;
 	}
 
-	function jobDisable( required string idOrName, required string length ) {
-		if( isNumeric( arguments.idOrName ) ) {
-			arguments.id= arguments.idOrName;
-		} else {
-			arguments.id= this.jobLookup( arguments.idOrName );
-		}
-		if( arguments.id < 0 ) {
-			var out= this.jobNotFound;
-		} else {
-			var out= this.apiRequest( api= "cron.pause", id= arguments.id, for= arguments.length )
-		}
-		return out;
-	}
-
-	function jobPause( required string idOrName ) {
+	function jobDisable( required string idOrName ) {
 		if( isNumeric( arguments.idOrName ) ) {
 			arguments.id= arguments.idOrName;
 		} else {
@@ -327,6 +313,20 @@ component {
 			var out= this.jobNotFound;
 		} else {
 			var out= this.apiRequest( api= "cron.disable", id= arguments.id )
+		}
+		return out;
+	}
+
+	function jobPause( required string idOrName, required string length ) {
+		if( isNumeric( arguments.idOrName ) ) {
+			arguments.id= arguments.idOrName;
+		} else {
+			arguments.id= this.jobLookup( arguments.idOrName );
+		}
+		if( arguments.id < 0 ) {
+			var out= this.jobNotFound;
+		} else {
+			var out= this.apiRequest( api= "cron.pause", id= arguments.id, for= arguments.length )
 		}
 		return out;
 	}
